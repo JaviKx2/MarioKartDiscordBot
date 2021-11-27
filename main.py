@@ -21,7 +21,7 @@ async def randomize(ctx, count: int):
 async def randomize_error_handling(ctx, error):
     if isinstance(error, NotEnoughTracks):
         await ctx.send("Número no válido. Intente con otro diferente.")
-    await ctx.send("Ha ocurrido un error.")
+    await ctx.send("Ha ocurrido un error. Inténtalo más tarde.")
 
 
 @bot.event
