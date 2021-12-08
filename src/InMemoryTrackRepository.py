@@ -1,4 +1,8 @@
-class InMemoryTrackRepository:
+from src.TrackRepository import TrackRepository
+
+
+class InMemoryTrackRepository(TrackRepository):
+
     numbered_tracks = {
         1: 'Luigi Circuit',
         2: 'Moo Moo Meadows',

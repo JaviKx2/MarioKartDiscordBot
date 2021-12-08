@@ -4,6 +4,7 @@ import discord
 from discord.ext import commands
 
 from src.InMemoryTrackRepository import InMemoryTrackRepository
+from src.Random import Random
 from src.RandomTracksSampler import RandomTracksSampler, SampleSizeExceedsMaxTracksSize, SampleSizeShouldBeGreater
 
 bot = commands.Bot(
@@ -14,7 +15,7 @@ bot = commands.Bot(
 
 @bot.command()
 async def randomize(ctx, count: int):
-    response = RandomTracksSampler(InMemoryTrackRepository()).randomize(count)
+    response = RandomTracksSampler(InMemoryTrackRepository(), Random()).randomize(count)
     await ctx.send(response)
 
 
