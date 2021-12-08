@@ -1,9 +1,10 @@
-import discord
-from discord.ext import commands
 import os
 
+import discord
+from discord.ext import commands
+
 from src.InMemoryTrackRepository import InMemoryTrackRepository
-from src.RandomTracksSampler import RandomTracksSampler, NotEnoughTracks
+from src.RandomTracksSampler import RandomTracksSampler, SampleSizeExceedsMaxTracksSize, SampleSizeShouldBeGreater
 
 bot = commands.Bot(
     command_prefix='^',
@@ -19,9 +20,11 @@ async def randomize(ctx, count: int):
 
 @randomize.error
 async def randomize_error_handling(ctx, error):
-    if isinstance(error, NotEnoughTracks):
-        await ctx.send("Número no válido. Intente con otro diferente.")
-    await ctx.send("Ha ocurrido un error. Inténtalo más tarde.")
+    if isinstance(error.original, SampleSizeShouldBeGreater):
+        return await ctx.send("Are u kidding me? Type a number greater than 0.")
+    if isinstance(error.original, SampleSizeExceedsMaxTracksSize):
+        return await ctx.send("Requested sample size exceeds current tracks size.")
+    await ctx.send("Unexpected error occured. Try again later.")
 
 
 @bot.event
