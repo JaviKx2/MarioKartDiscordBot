@@ -1,16 +1,37 @@
-# This is a sample Python script.
+import os
 
-# Press Mayús+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+import discord
+from discord.ext import commands
+
+from src.InMemoryTrackRepository import InMemoryTrackRepository
+from src.Random import Random
+from src.RandomTracksSampler import RandomTracksSampler, SampleSizeExceedsMaxTracksSize, SampleSizeShouldBeGreater
+
+bot = commands.Bot(
+    command_prefix='^',
+    description="Limitless features for Mario Kart games"
+)
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+@bot.command()
+async def randomize(ctx, count: int):
+    response = RandomTracksSampler(InMemoryTrackRepository(), Random()).randomize(count)
+    await ctx.send(response)
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+@randomize.error
+async def randomize_error_handling(ctx, error):
+    if isinstance(error.original, SampleSizeShouldBeGreater):
+        return await ctx.send("Are u kidding me? Type a number greater than 0.")
+    if isinstance(error.original, SampleSizeExceedsMaxTracksSize):
+        return await ctx.send("Requested sample size exceeds current tracks size.")
+    await ctx.send("Unexpected error occured. Try again later.")
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+
+@bot.event
+async def on_ready():
+    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="_help"))
+    print("Bot is ready!")
+
+
+bot.run(os.getenv('MARIOKART_BOT_TOKEN'))
