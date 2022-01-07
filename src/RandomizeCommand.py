@@ -23,3 +23,13 @@ async def handle_randomize_errors(ctx, error):
     if isinstance(error.original, SampleSizeExceedsMaxTracksSize):
         return await ctx.send("Requested sample size exceeds current tracks size.")
     await ctx.send("Unexpected error occured. Try again later.")
+
+
+@randomize.after_invoke
+async def after_invoke(ctx):
+    await ctx.send("Here you go!")
+
+
+@randomize.before_invoke
+async def before_invoke(ctx):
+    await ctx.send("Randomizing...")
