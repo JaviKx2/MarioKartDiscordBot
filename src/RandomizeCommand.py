@@ -17,7 +17,7 @@ async def randomize(ctx, *args):
 
 
 @randomize.error
-async def randomize_error_handling(ctx, error):
+async def handle_randomize_errors(ctx, error):
     if isinstance(error.original, SampleSizeShouldBeGreater):
         return await ctx.send("Are u kidding me? Type a number greater than 0.")
     if isinstance(error.original, SampleSizeExceedsMaxTracksSize):
