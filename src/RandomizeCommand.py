@@ -8,8 +8,15 @@ from src.SampleSizeCalc import SampleSizeCalcFactory
 
 sampler = RandomTracksSampler(InMemoryTrackRepository(), Random())
 
+help_message = '^randomize: Returns a list of tracks with a random size\t' \
+               '^randomize {number}: Returns  a list with {number} tracks\t' \
+               '^randomize {number} {number}: Returns a list of tracks with a size between the numbers provided'
 
-@command(aliases=["r", "rand"])
+
+@command(
+    aliases=["r", "rand"],
+    help=help_message
+)
 async def randomize(ctx, *args):
     sample_size_calc = SampleSizeCalcFactory.get(*args)
     response = sampler.randomize(sample_size_calc.calc())
