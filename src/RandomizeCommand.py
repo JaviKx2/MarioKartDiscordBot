@@ -6,10 +6,11 @@ from src.RandomTracksSampler import RandomTracksSampler, SampleSizeShouldBeGreat
     SampleSizeExceedsMaxTracksSize
 from src.SampleSizeCalc import SampleSizeCalcFactory
 
+sampler = RandomTracksSampler(InMemoryTrackRepository(), Random())
+
 
 @command(aliases=["r", "rand"])
 async def randomize(ctx, *args):
-    sampler = RandomTracksSampler(InMemoryTrackRepository(), Random())
     sample_size_calc = SampleSizeCalcFactory.get(*args)
     response = sampler.randomize(sample_size_calc.calc())
     await ctx.send(response)
