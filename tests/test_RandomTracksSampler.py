@@ -69,7 +69,7 @@ class TestRandomTracksSampler(TestCase):
     def test_it_returns_a_formatted_list_of_tracks(self):
         actual_result = self.sampler.randomize(4)
         self.assertEqual(
-            "Listing 4 randomized tracks:\n"
+            "Listing 4 tracks:\n"
             "1: Luigi Circuit\n"
             "2: Moo Moo Meadows\n"
             "3: Mushroom Gorge\n"
