@@ -3,8 +3,8 @@ import json
 
 mapping = dict(
     lc=49,
-    mg=50,
-    mmm=51,
+    mmm=50,
+    mg=51,
     tf=52,
     mc=53,
     cm=54,
