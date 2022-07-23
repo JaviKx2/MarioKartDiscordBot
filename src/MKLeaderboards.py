@@ -34,7 +34,8 @@ mapping = dict(
     rmc3=77,
     rpg=78,
     rdkm=79,
-    rbc64=80
+    rbc64=80,
+    rbc=80
 )
 
 
