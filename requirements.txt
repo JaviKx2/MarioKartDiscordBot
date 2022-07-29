@@ -1,2 +1,4 @@
 discord.py==1.7.3
 requests==2.28.1
+Jinja2==3.1.2
+html2image==2.0.1

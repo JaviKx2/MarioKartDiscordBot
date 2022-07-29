@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="top10.css">
+    <title>Document</title>
+</head>
+<body style="position: relative">
+<table class="styled-table centered">
+    <thead>
+    <tr>
+        <th colspan="3">
+            <div style="position: relative">
+                <img src="{{ track.image_url }}"/>
+                <div class="centered">{{track.name}}</div>
+            </div>
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for top_row in track.top %}
+    <tr {% if top_row.rank == 1 %}
+        class="active-first-row"
+        {% elif top_row.rank == 2 %}
+        class="active-second-row"
+        {% elif top_row.rank == 3 %}
+        class="active-third-row"
+        {% endif %}>
+        <td class="rank">{{top_row.rank}}</td>
+        <td class="name">{{top_row.name}}</td>
+        <td class="time">{{top_row.score_formatted}}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+</body>
+</html>
