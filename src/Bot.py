@@ -1,21 +1,19 @@
-import discord
-from discord.ext import commands
+import disnake
+from disnake.ext import commands
 
 from src.MKLeaderboardsCommand import leaderboards
 from src.RandomizeCommand import randomize
 
-bot = commands.Bot(
-    command_prefix='^',
-    description="Limitless features for Mario Kart games"
-)
+bot = commands.InteractionBot()
+
 
 # noinspection PyTypeChecker
-bot.add_command(randomize)
+bot.add_slash_command(randomize)
 # noinspection PyTypeChecker
-bot.add_command(leaderboards)
+bot.add_slash_command(leaderboards)
 
 
 @bot.event
 async def on_ready():
-    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="_help"))
+    await bot.change_presence(activity=disnake.Activity(type=disnake.ActivityType.watching, name="_help"))
     print("Local Bot is ready!")
