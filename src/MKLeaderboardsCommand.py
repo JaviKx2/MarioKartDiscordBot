@@ -11,8 +11,3 @@ async def leaderboards(ctx: CommandInteraction, track_abbrev: str):
     for player in track.get('data'):
         response += f"{str(player.get('rank')) + '.': <5} {player.get('name'):>10} {player.get('score_formatted'):^20}\n"
     await ctx.send(response)
-
-
-@leaderboards.after_invoke
-async def after_invoke(ctx: CommandInteraction):
-    await ctx.send(f"<@{ctx.author.id}>, results are ready!")
