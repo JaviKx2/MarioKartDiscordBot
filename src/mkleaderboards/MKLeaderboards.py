@@ -1,5 +1,8 @@
-import requests
 import json
+
+import requests
+
+MKLEADERBOARDS_API_URL = "https://www.mkleaderboards.com/api"
 
 mapping = dict(
     lc=49,
@@ -39,8 +42,12 @@ mapping = dict(
 )
 
 
-def get_course(track_name):
-    track_json = requests.get(
-        f"https://www.mkleaderboards.com/api/charts/mkw_nonsc_spain/{mapping.get(track_name)}").content
-    track = json.loads(track_json)
-    return track
+def get_course(track_abbrev: str):
+    url = f"{MKLEADERBOARDS_API_URL}/charts/mkw_nonsc_spain/{mapping.get(track_abbrev)}"
+    return __request_json(url)
+
+
+def __request_json(url):
+    response_content = requests.get(url).content
+    content_json = json.loads(response_content)
+    return content_json
