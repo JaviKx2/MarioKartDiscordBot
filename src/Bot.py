@@ -1,7 +1,7 @@
 import disnake
 from disnake.ext import commands
 
-from src.MKLeaderboardsCommand import leaderboards
+from src.mkleaderboards.commands.MKLeaderboardsCommand import leaderboards
 from src.RandomizeCommand import randomize
 
 bot = commands.InteractionBot()
