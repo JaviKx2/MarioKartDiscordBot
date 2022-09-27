@@ -1,6 +1,6 @@
 from disnake import CommandInteraction
 
-from src.mkleaderboards.MKLeaderboards import get_course
+from src.mkleaderboards.MKLeaderboardsAPI import get_course
 
 
 async def execute(ctx: CommandInteraction, track_abbrev: str):
