@@ -54,22 +54,17 @@ def get_ranking(location: str = 'spain'):
     content = requests.get(url).content
     parsed_html = BeautifulSoup(content, 'html.parser')
     first_table = parsed_html.find_all("table")[0]
-    counter = 0
-    current_row = dict()
-    rows = list()
+    column_index, current_row, rows = 0, dict(), list()
+    column_map = {1: "position", 3: "player", 4: "points"}
     for cell in first_table.find_all('td')[4:]:
-        counter = counter + 1
-        if counter == 1:
-            current_row.update(position=cell.text)
-        if counter == 3:
-            current_row.update(player=cell.text)
-        if counter == 4:
-            current_row.update(points=cell.text)
-        if counter % 4 != 0:
+        column_index = column_index + 1
+        if column_index in column_map:
+            current_row.update({column_map.get(column_index): cell.text})
+        if column_index % 4 != 0:
             continue
         rows.append(current_row)
         current_row = dict()
-        counter = 0
+        column_index = 0
     return rows
 
 

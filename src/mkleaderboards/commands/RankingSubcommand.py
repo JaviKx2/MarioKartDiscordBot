@@ -27,7 +27,7 @@ class RankingScopeChoice(str, Enum):
 
 async def execute(ctx: CommandInteraction, country: str = 'spain'):
     ranking = get_ranking(country)
-    response = ">>> "
+    response = f">>> **Player Ranking ({country})**\n"
     for row in ranking[:50]:
         response += f"{str(row.get('position')) + '.': <5} {row.get('player'):>10} {row.get('points'):^20}\n"
     await ctx.send(response)
