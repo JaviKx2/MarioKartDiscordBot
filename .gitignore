@@ -2,3 +2,4 @@
 venv
 **/*.pyc
 /bot.log
+.env
