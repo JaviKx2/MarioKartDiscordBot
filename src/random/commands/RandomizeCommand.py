@@ -15,12 +15,17 @@ help_message = '^randomize: Returns a list of tracks with a random size\t' \
                '^randomize {number} {number}: Returns a list of tracks with a size between the numbers provided'
 
 
-@slash_command(name="track_sampler", description="Use this command to get track samples")
+@slash_command(
+    name="track_sampler",
+    description="Use this command to get track samples"
+)
 async def randomize(ctx: CommandInteraction):
     pass
 
 
-@randomize.sub_command(description="List tracks within a range")
+@randomize.sub_command(
+    description="List tracks within a range"
+)
 async def sample_range(ctx: CommandInteraction, start: int, end: int):
     max_size = tracks_repository.count_all()
     sample_size = WithinRangeSampleSizeCalc(Random(), start, end).calc(max_size)
@@ -28,13 +33,17 @@ async def sample_range(ctx: CommandInteraction, start: int, end: int):
     await ctx.send(response)
 
 
-@randomize.sub_command(description="List tracks with a concrete size")
+@randomize.sub_command(
+    description="List tracks with a concrete size"
+)
 async def size(ctx: CommandInteraction, sample_size: int):
     response = sampler.randomize(sample_size)
     await ctx.send(response)
 
 
-@randomize.sub_command(description="List tracks with random size")
+@randomize.sub_command(
+    description="List tracks with random size"
+)
 async def random_size(ctx: CommandInteraction):
     max_size = tracks_repository.count_all()
     sample_size = RandomSampleSizeCalc(Random()).calc(max_size)
@@ -50,3 +59,6 @@ async def handle_randomize_errors(ctx: CommandInteraction, error):
         return await ctx.send("Requested sample size exceeds current tracks size.")
     await ctx.send("Unexpected error occured. Try again later.")
 
+
+def register(bot):
+    bot.add_slash_command(randomize)
