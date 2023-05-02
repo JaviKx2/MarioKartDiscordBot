@@ -1,4 +1,4 @@
-from src.timetrialcomp.domain.timetrial_comp_repository import TimeTrialCompetitionRepository
+from src.timetrialcomp.competition.domain.timetrial_comp_repository import TimeTrialCompetitionRepository
 from datetime import datetime
 
 
@@ -7,6 +7,6 @@ class CurrentCompetitionsFinder:
         super().__init__()
         self.__repository = repository
 
-    def execute(self, **kwargs) -> []:
+    def find_current_competitions(self) -> []:
         now = datetime.now()
         return self.__repository.find_between_starts_at_and_ends_at(now)

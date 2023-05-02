@@ -18,5 +18,4 @@ bot.add_slash_command(timetrial_competition)
 
 @bot.event
 async def on_ready():
-    await bot.change_presence(activity=disnake.Activity(type=disnake.ActivityType.watching, name="_help"))
-    print("Local Bot is ready!")
+    await bot.change_presence(activity=disnake.Activity(type=disnake.ActivityType.listening, name="_help"))

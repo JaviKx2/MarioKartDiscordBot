@@ -21,5 +21,5 @@ timetrial_competition_table = sa.Table(
     sa.Column('id', UUID(as_uuid=True), primary_key=True, default=uuid.uuid4),
     sa.Column('track', sa.String, nullable=False),
     sa.Column('starts_at', sa.DateTime, nullable=False),
-    sa.Column('ends_at', sa.Boolean, nullable=False, default=False)
+    sa.Column('ends_at', sa.DateTime, nullable=False, default=False)
 )
