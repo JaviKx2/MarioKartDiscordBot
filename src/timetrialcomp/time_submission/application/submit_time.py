@@ -13,6 +13,8 @@ class TimeSubmitter:
 
     def submit_time(self, params: SubmitTimeParams) -> Union[DomainError, None]:
         aggregate = submitted_time.submit(params)
+
         if has_errors(aggregate):
             return aggregate
+
         self.__repository.save(aggregate)

@@ -6,7 +6,7 @@ from disnake.ext import commands
 from disnake.ext.commands import slash_command
 
 from src.shared.domain.errors import has_errors, DomainError
-from src.timetrialcomp.competition.domain.timetrial_competition import CreateTimeTrialCompetitionParams
+from src.timetrialcomp.competition.domain.timetrial_competition import CreateParams
 from src.timetrialcomp.competition.infrastructure.dependency_injection import timetrial_competition_creator, \
     current_competitions_finder, time_submitter
 from src.timetrialcomp.time_submission.domain.submitted_time import SubmitTimeParams
@@ -24,7 +24,7 @@ async def create(
         starts_at=None,
         duration_in_months=None
 ):
-    params = CreateTimeTrialCompetitionParams(
+    params = CreateParams(
         id=uuid.uuid4(),
         track_code=track,
         starts_at=starts_at,
