@@ -4,6 +4,7 @@ from discord.ext import commands
 from src.RandomizeCommand import randomize
 
 bot = commands.Bot(
+    intents=discord.Intents.default(),
     command_prefix='^',
     description="Limitless features for Mario Kart games"
 )
