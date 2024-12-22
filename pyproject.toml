@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "mariokartdiscordbot"
+version = "0.1.0"
+description = ""
+authors = ["Javi <f.javier.r.m@outlook.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+disnake = "^2.9.3"
+beautifulsoup4 = "^4.12.3"
+sqlalchemy = "^2.0.36"
+python-dateutil = "^2.9.0.post0"
+requests = "^2.32.3"
+psycopg2 = "^2.9.10"
+
+
+[tool.poetry.group.dev.dependencies]
+alembic = "^1.14.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
