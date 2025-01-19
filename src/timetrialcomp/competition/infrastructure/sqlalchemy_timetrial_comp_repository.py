@@ -15,7 +15,7 @@ class SqlAlchemyTimeTrialCompetitionRepository(SqlAlchemyCoreRepository, TimeTri
 
     def save(self, timetrial_competition: TimeTrialCompetition):
         with self._engine.begin() as connection:
-            connection.execute(
+            return connection.execute(
                 table.insert(),
                 dict(
                     id=timetrial_competition.id,

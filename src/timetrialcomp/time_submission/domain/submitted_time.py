@@ -25,7 +25,7 @@ class SubmitTimeParams(TypedDict, total=False):
 
 
 def submit(params: SubmitTimeParams) -> Union[DomainError, SubmittedTime]:
-    if not params.get("id"):
+    if not params.get("timetrial_competition_id"):
         return DomainError(code="submitted_time.id_mandatory", message="Id is not optional")
     params.update(approved=False)
     return SubmittedTime(**params)

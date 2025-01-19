@@ -1,5 +1,4 @@
 import uuid
-from datetime import datetime
 
 from disnake import CommandInteraction
 from disnake.ext import commands
@@ -18,46 +17,53 @@ async def timetrial_competition(ctx: CommandInteraction):
 
 
 @timetrial_competition.sub_command()
+@commands.has_permissions(administrator=True)
 async def create(
         ctx: CommandInteraction,
         track: str = commands.Param(description="track code"),
         starts_at=None,
         duration_in_months=None
 ):
-    params = CreateParams(
-        id=uuid.uuid4(),
-        track_code=track,
-        starts_at=starts_at,
-        duration_in_months=duration_in_months
+    create_response = timetrial_competition_creator.create(
+        CreateParams(
+            id=uuid.uuid4(),
+            track_code=track,
+            starts_at=starts_at,
+            duration_in_months=duration_in_months
+        )
     )
-
-    create_response = timetrial_competition_creator.create(params)
 
     if has_errors(create_response):
         error: DomainError = create_response
         return await ctx.send("ERROR: " + error.message)
 
-    await ctx.send("TT Competition was created.")
+    await ctx.send(f"TT Competition was created.\n\n"
+                   f"🆔: {create_response.id}\n"
+                   f"🏁 Track: {create_response.track_code}\n"
+                   f"📅 Starts at {create_response.starts_at}\n"
+                   f"📅 Ends at {create_response.ends_at}\n")
 
 
 @timetrial_competition.sub_command()
 async def current(ctx: CommandInteraction):
     current_competitions = current_competitions_finder.find_current_competitions()
 
-    await ctx.send(f"Current competition: {current_competitions[0].track}")
+    if len(current_competitions) == 0:
+        await ctx.send(f"No competitions found.")
+    else:
+        await ctx.send(f"Current competition: {current_competitions[0].track}")
 
 
 @timetrial_competition.sub_command()
 async def submit_time(
         ctx: CommandInteraction,
+        ttcomp_id,
         time,
         pic_url,
         ctgp_url
 ):
-    current_competitions = current_competitions_finder.find_current_competitions()
-    first_running_competition = current_competitions[0]
     params = SubmitTimeParams(time=time, pic_url=pic_url, ctgp_url=ctgp_url,
-                              timetrial_competition_id=first_running_competition.id)
+                              timetrial_competition_id=ttcomp_id)
 
     submit_time_response = time_submitter.submit_time(params)
 

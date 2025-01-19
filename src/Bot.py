@@ -1,4 +1,5 @@
 import disnake
+from disnake import ApplicationCommandInteraction
 from disnake.ext import commands
 
 from src.mkleaderboards.commands.MKLeaderboardsCommand import leaderboards
@@ -6,7 +7,6 @@ from src.random.commands.RandomizeCommand import randomize
 from src.timetrialcomp.commands.TimeTrialCompetitionCommand import timetrial_competition
 
 bot = commands.InteractionBot()
-
 
 # noinspection PyTypeChecker
 bot.add_slash_command(randomize)
