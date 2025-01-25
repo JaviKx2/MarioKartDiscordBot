@@ -6,7 +6,7 @@ authors = ["Javi <f.javier.r.m@outlook.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.12"
+python = "^3.11"
 disnake = "^2.9.3"
 beautifulsoup4 = "^4.12.3"
 sqlalchemy = "^2.0.36"
