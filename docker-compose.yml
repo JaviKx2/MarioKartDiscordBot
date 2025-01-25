@@ -1,0 +1,19 @@
+version: '3.9' # specify docker-compose version
+
+services:
+  postgres:
+    image: postgres:latest # use the latest PostgreSQL image
+    container_name: postgres_container
+    restart: always
+    environment:
+      POSTGRES_USER: postgres      # set the PostgreSQL username
+      POSTGRES_PASSWORD: postgrespw  # set the PostgreSQL password
+      POSTGRES_DB: postgres   # set the PostgreSQL database name
+    ports:
+      - "5432:5432" # expose the PostgreSQL port
+    volumes:
+      - ./docker/postgres/data:/var/lib/postgresql/data # persist data in a local directory
+
+volumes:
+  postgres_data:
+    driver: local
