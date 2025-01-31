@@ -20,6 +20,7 @@ class SqlAlchemyTimeTrialCompetitionRepository(SqlAlchemyCoreRepository, TimeTri
                 dict(
                     id=timetrial_competition.id,
                     track=timetrial_competition.track_code,
+                    mode=timetrial_competition.mode,
                     starts_at=timetrial_competition.starts_at,
                     ends_at=timetrial_competition.ends_at,
                 )
@@ -36,6 +37,7 @@ class SqlAlchemyTimeTrialCompetitionRepository(SqlAlchemyCoreRepository, TimeTri
                 yield TimeTrialCompetition(
                     id=row.id,
                     track_code=row.track,
+                    mode=row.mode,
                     starts_at=row.starts_at,
                     ends_at=row.ends_at
                 )

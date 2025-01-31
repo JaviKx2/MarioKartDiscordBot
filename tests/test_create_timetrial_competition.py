@@ -6,7 +6,7 @@ from unittest.mock import Mock
 from src.timetrialcomp.competition.application.create_timetrial_competition import TimeTrialCompetitionCreator
 from src.timetrialcomp.competition.domain.timetrial_comp_repository import TimeTrialCompetitionRepository
 from src.timetrialcomp.competition.domain.timetrial_competition import CreateParams, \
-    CompetitionMustStartBeforeEnding, MoreThanOneDurationSet, TimeTrialCompetition
+    CompetitionMustStartBeforeEnding, DurationUseISO8601Format, TimeTrialCompetition
 
 repository = TimeTrialCompetitionRepository()
 use_case = TimeTrialCompetitionCreator(repository)
@@ -77,5 +77,5 @@ class TestTimeTrialCompetitionCreator(TestCase):
 
         response = use_case.create(params=params)
 
-        self.assertIsInstance(response, MoreThanOneDurationSet)
+        self.assertIsInstance(response, DurationUseISO8601Format)
         repository.save.assert_not_called()

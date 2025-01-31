@@ -20,30 +20,30 @@ async def timetrial_competition(ctx: CommandInteraction):
 async def create(
         ctx: CommandInteraction,
         track: str = commands.Param(description="track code"),
-        starts_at=None,
-        duration_in_months=None,
-
+        mode: str = commands.Param(description="mode", choices=["3-Schrooms", "Shroomless"]),
+        duration: str = "P1W"
 ):
     print(ctx.user)
-    create_response = timetrial_competition_creator.create(
+    created_comp = timetrial_competition_creator.create(
         CreateParams(
             id=uuid.uuid4(),
             track_code=track,
-            starts_at=starts_at,
-            duration_in_months=duration_in_months
+            mode=mode,
+            duration_iso8601=duration
         )
     )
 
-    if has_errors(create_response):
-        error: DomainError = create_response
+    if has_errors(created_comp):
+        error: DomainError = created_comp
         return await ctx.send("ERROR: " + error.message)
 
     await ctx.send(
         f"TT Competition was created.\n\n"
-        f"🆔: {create_response.id}\n"
-        f"🏁 Track: {create_response.track_code}\n"
-        f"📅 Starts at {create_response.starts_at}\n"
-        f"📅 Ends at {create_response.ends_at}\n"
+        f"🆔: {created_comp.id}\n"
+        f"🏁 Mode: {created_comp.mode}\n"
+        f"🏁 Track: {created_comp.track_code}\n"
+        f"📅 Starts at <t:{created_comp.starts_at.timestamp()}>\n"
+        f"📅 Ends at <t:{created_comp.ends_at.timestamp()}>\n"
     )
 
 
@@ -59,8 +59,9 @@ async def current(ctx: CommandInteraction):
             view_comps += (
                 f"🆔: {comp.id}\n"
                 f"🏁 Track: {comp.track_code}\n"
-                f"📅 Starts at {comp.starts_at}\n"
-                f"📅 Ends at {comp.ends_at}\n\n"
+                f"🍄 Mode: {comp.mode}\n"
+                f"📅 Starts at <t:{str(comp.starts_at.timestamp()).split(".")[0]}>\n"
+                f"📅 Ends at <t:{str(comp.ends_at.timestamp()).split(".")[0]}>\n\n"
             )
 
         await ctx.send(
@@ -77,13 +78,18 @@ async def submit_time(
         pic_url=None,
         ctgp_url=None
 ):
-    params = SubmitTimeParams(time=time, pic_url=pic_url, ctgp_url=ctgp_url,
-                              timetrial_competition_id=ttcomp_id, player_id=str(ctx.user.id))
+    params = SubmitTimeParams(
+        time=time,
+        pic_url=pic_url,
+        ctgp_url=ctgp_url,
+        timetrial_competition_id=ttcomp_id,
+        player_id=str(ctx.user.id)
+    )
 
-    submit_time_response = time_submitter.submit_time(params)
+    submitted_time = time_submitter.submit_time(params)
 
-    if has_errors(submit_time_response):
-        error: DomainError = submit_time_response
+    if has_errors(submitted_time):
+        error: DomainError = submitted_time
         return await ctx.send("ERROR: " + error.message)
 
     await ctx.send("Time was submitted.")
