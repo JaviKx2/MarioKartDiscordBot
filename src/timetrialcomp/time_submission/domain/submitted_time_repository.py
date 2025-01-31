@@ -5,3 +5,6 @@ class SubmittedTimeRepository:
     def save(self, submitted_time: SubmittedTime):
         raise NotImplementedError
 
+    def ranking(self, competition_id: str):
+        raise NotImplementedError
+

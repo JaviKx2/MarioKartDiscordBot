@@ -17,13 +17,14 @@ async def timetrial_competition(ctx: CommandInteraction):
 
 
 @timetrial_competition.sub_command()
-@commands.has_permissions(administrator=True)
 async def create(
         ctx: CommandInteraction,
         track: str = commands.Param(description="track code"),
         starts_at=None,
-        duration_in_months=None
+        duration_in_months=None,
+
 ):
+    print(ctx.user)
     create_response = timetrial_competition_creator.create(
         CreateParams(
             id=uuid.uuid4(),
@@ -37,21 +38,35 @@ async def create(
         error: DomainError = create_response
         return await ctx.send("ERROR: " + error.message)
 
-    await ctx.send(f"TT Competition was created.\n\n"
-                   f"🆔: {create_response.id}\n"
-                   f"🏁 Track: {create_response.track_code}\n"
-                   f"📅 Starts at {create_response.starts_at}\n"
-                   f"📅 Ends at {create_response.ends_at}\n")
+    await ctx.send(
+        f"TT Competition was created.\n\n"
+        f"🆔: {create_response.id}\n"
+        f"🏁 Track: {create_response.track_code}\n"
+        f"📅 Starts at {create_response.starts_at}\n"
+        f"📅 Ends at {create_response.ends_at}\n"
+    )
 
 
 @timetrial_competition.sub_command()
 async def current(ctx: CommandInteraction):
-    current_competitions = current_competitions_finder.find_current_competitions()
+    current_competitions = list(current_competitions_finder.find_current_competitions())
 
     if len(current_competitions) == 0:
         await ctx.send(f"No competitions found.")
     else:
-        await ctx.send(f"Current competition: {current_competitions[0].track}")
+        view_comps = ""
+        for comp in current_competitions:
+            view_comps += (
+                f"🆔: {comp.id}\n"
+                f"🏁 Track: {comp.track_code}\n"
+                f"📅 Starts at {comp.starts_at}\n"
+                f"📅 Ends at {comp.ends_at}\n\n"
+            )
+
+        await ctx.send(
+            f"Current competitions:\n\n"
+            f"{view_comps}"
+        )
 
 
 @timetrial_competition.sub_command()
@@ -59,11 +74,11 @@ async def submit_time(
         ctx: CommandInteraction,
         ttcomp_id,
         time,
-        pic_url,
-        ctgp_url
+        pic_url=None,
+        ctgp_url=None
 ):
     params = SubmitTimeParams(time=time, pic_url=pic_url, ctgp_url=ctgp_url,
-                              timetrial_competition_id=ttcomp_id)
+                              timetrial_competition_id=ttcomp_id, player_id=str(ctx.user.id))
 
     submit_time_response = time_submitter.submit_time(params)
 
@@ -72,3 +87,30 @@ async def submit_time(
         return await ctx.send("ERROR: " + error.message)
 
     await ctx.send("Time was submitted.")
+
+
+@timetrial_competition.sub_command()
+async def ranking(
+        ctx: CommandInteraction,
+        ttcomp_id
+):
+    ranking_response = time_submitter.ranking(ttcomp_id)
+
+    if has_errors(ranking_response):
+        error: DomainError = ranking_response
+        return await ctx.send("ERROR: " + error.message)
+
+    view_rows = ""
+    for i, row in enumerate(ranking_response):
+        view_rows += (
+            f"{i+1}. "
+            f"Name: <@{ctx.user.id}>\t"
+            f"🕒 Time: {row['time']}\t"
+            f"📸 Pic: {row['pic_url']}\t"
+            f"🔗 CTGP: {row['ctgp_url']}\t"
+            f"Approved: {'✔' if row['approved'] else '❌'}\n"
+        )
+
+    await ctx.send(
+        f"Ranking:\n\n{view_rows}"
+    )

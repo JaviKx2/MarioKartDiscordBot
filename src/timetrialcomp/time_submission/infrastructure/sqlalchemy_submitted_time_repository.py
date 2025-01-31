@@ -14,5 +14,30 @@ class SqlAlchemySubmittedTimeRepository(SqlAlchemyCoreRepository, SubmittedTimeR
         with self._engine.begin() as connection:
             connection.execute(
                 submitted_time_table.insert(),
-                submitted_time
+                dict(
+                    id=submitted_time.id,
+                    time=submitted_time.time,
+                    approved=submitted_time.approved,
+                    pic_url=submitted_time.pic_url,
+                    ctgp_url=submitted_time.ctgp_url,
+                    timetrial_competition_id=submitted_time.timetrial_competition_id,
+                    player_id=submitted_time.player_id,
+                )
             )
+
+    def ranking(self, competition_id: str):
+        with self._engine.connect() as connection:
+            result = connection.execute(
+                submitted_time_table.select()
+                .where(submitted_time_table.c.timetrial_competition_id == competition_id)
+                .order_by(submitted_time_table.c.time)
+            )
+            return [dict(
+                id=row.id,
+                time=row.time,
+                approved=row.approved,
+                pic_url=row.pic_url,
+                ctgp_url=row.ctgp_url,
+                timetrial_competition_id=row.timetrial_competition_id,
+                player_id=row.player_id
+            ) for row in result]

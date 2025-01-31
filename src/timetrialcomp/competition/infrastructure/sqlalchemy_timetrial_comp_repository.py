@@ -31,4 +31,11 @@ class SqlAlchemyTimeTrialCompetitionRepository(SqlAlchemyCoreRepository, TimeTri
                 .where(table.c.starts_at <= reference_datetime)\
                 .where(table.c.ends_at >= reference_datetime)
             result = connection.execute(stmt)
-            return result.all()
+
+            for row in result.all():
+                yield TimeTrialCompetition(
+                    id=row.id,
+                    track_code=row.track,
+                    starts_at=row.starts_at,
+                    ends_at=row.ends_at
+                )

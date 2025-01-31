@@ -18,3 +18,6 @@ class TimeSubmitter:
             return aggregate
 
         self.__repository.save(aggregate)
+
+    def ranking(self, competition_id: str):
+        return self.__repository.ranking(competition_id)
