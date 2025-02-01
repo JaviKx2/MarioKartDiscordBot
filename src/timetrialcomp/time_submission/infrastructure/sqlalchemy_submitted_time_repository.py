@@ -1,3 +1,4 @@
+from sqlalchemy import select, func, and_
 from sqlalchemy.engine import Engine
 
 from src.shared.infrastructure.persistence.sqlalchemy_core_repository import SqlAlchemyCoreRepository
@@ -27,11 +28,29 @@ class SqlAlchemySubmittedTimeRepository(SqlAlchemyCoreRepository, SubmittedTimeR
 
     def ranking(self, competition_id: str):
         with self._engine.connect() as connection:
-            result = connection.execute(
-                submitted_time_table.select()
-                .where(submitted_time_table.c.timetrial_competition_id == competition_id)
-                .order_by(submitted_time_table.c.time)
+            # Subquery to get the best (minimum) time for each player
+            subquery = (
+                select(
+                    submitted_time_table.c.player_id,
+                    func.min(submitted_time_table.c.time).label("best_time")
+                )
+                .group_by(submitted_time_table.c.player_id)
+                .subquery()
             )
+
+            # Main query to get all details for the best times
+            query = (
+                select(submitted_time_table)
+                .join(
+                    subquery,
+                    and_(
+                        submitted_time_table.c.player_id == subquery.c.player_id,
+                        submitted_time_table.c.time == subquery.c.best_time
+                    )
+                )
+                .order_by(submitted_time_table.c.time)  # Rank by best time
+            )
+            result = connection.execute(query)
             return [dict(
                 id=row.id,
                 time=row.time,

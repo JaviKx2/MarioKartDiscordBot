@@ -23,7 +23,6 @@ async def create(
         mode: str = commands.Param(description="mode", choices=["3-Schrooms", "Shroomless"]),
         duration: str = "P1W"
 ):
-    print(ctx.user)
     created_comp = timetrial_competition_creator.create(
         CreateParams(
             id=uuid.uuid4(),
@@ -106,17 +105,27 @@ async def ranking(
         error: DomainError = ranking_response
         return await ctx.send("ERROR: " + error.message)
 
+    if len(ranking_response) == 0:
+        return await ctx.send(f"No times submitted yet.")
+
     view_rows = ""
     for i, row in enumerate(ranking_response):
+        user = await ctx.bot.get_or_fetch_user(row['player_id'])
         view_rows += (
-            f"{i+1}. "
-            f"Name: <@{ctx.user.id}>\t"
-            f"🕒 Time: {row['time']}\t"
-            f"📸 Pic: {row['pic_url']}\t"
+            f"{render_position(i)} "
+            f"{user.display_name}\t"
+            f"🕒 {row['time']}\t"
             f"🔗 CTGP: {row['ctgp_url']}\t"
             f"Approved: {'✔' if row['approved'] else '❌'}\n"
         )
 
-    await ctx.send(
-        f"Ranking:\n\n{view_rows}"
-    )
+    await ctx.send(f"{view_rows}")
+
+
+def render_position(index):
+    positions = ["🥇", "🥈", "🥉", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "🔟"]
+
+    if 0 <= index < len(positions):
+        return positions[index]
+
+    return str(index + 1)
