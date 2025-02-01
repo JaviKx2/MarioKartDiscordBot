@@ -59,8 +59,8 @@ async def current(ctx: CommandInteraction):
                 f"🆔: {comp.id}\n"
                 f"🏁 Track: {comp.track_code}\n"
                 f"🍄 Mode: {comp.mode}\n"
-                f"📅 Starts at <t:{str(comp.starts_at.timestamp()).split(".")[0]}>\n"
-                f"📅 Ends at <t:{str(comp.ends_at.timestamp()).split(".")[0]}>\n\n"
+                f"📅 Starts at {render_timestamp(comp.starts_at)}\n"
+                f"📅 Ends at {render_timestamp(comp.ends_at)}\n\n"
             )
 
         await ctx.send(
@@ -129,3 +129,8 @@ def render_position(index):
         return positions[index]
 
     return str(index + 1)
+
+
+def render_timestamp(dt):
+    timestamp = str(dt.timestamp()).split(".")[0]
+    return f"<t:{timestamp}>"
