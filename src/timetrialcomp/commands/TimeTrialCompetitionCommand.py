@@ -1,14 +1,19 @@
 import uuid
+from typing import Optional, Union, overload
 
-from disnake import CommandInteraction
+from disnake import CommandInteraction, MessageInteraction, ButtonStyle, Emoji, PartialEmoji
 from disnake.ext import commands
 from disnake.ext.commands import slash_command
+from disnake.ui import View, Button
+from disnake.ui.button import V_co
+from disnake.ui.item import ClientT
 
 from src.shared.domain.errors import has_errors, DomainError
 from src.timetrialcomp.competition.domain.timetrial_competition import CreateParams
 from src.timetrialcomp.competition.infrastructure.dependency_injection import timetrial_competition_creator, \
     current_competitions_finder, time_submitter
 from src.timetrialcomp.time_submission.domain.submitted_time import SubmitTimeParams
+from src.timetrialcomp.ui import MainMenuButton, ListCompsButton, MainMenuView, render_position, render_timestamp
 
 
 @slash_command()
@@ -122,15 +127,8 @@ async def ranking(
     await ctx.send(f"{view_rows}")
 
 
-def render_position(index):
-    positions = ["🥇", "🥈", "🥉", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "🔟"]
-
-    if 0 <= index < len(positions):
-        return positions[index]
-
-    return str(index + 1)
-
-
-def render_timestamp(dt):
-    timestamp = str(dt.timestamp()).split(".")[0]
-    return f"<t:{timestamp}>"
+@timetrial_competition.sub_command()
+async def ui(
+        ctx: CommandInteraction
+):
+    await ctx.send(view=MainMenuView())
