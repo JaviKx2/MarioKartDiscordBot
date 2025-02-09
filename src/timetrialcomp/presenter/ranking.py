@@ -19,7 +19,7 @@ async def present_ranking(ttcomp_id, find_user) -> str:
         display_names.update({row['player_id']: user.display_name})
         max_len = max(max_len, len(user.display_name))
 
-    view_rows = ""
+    view_rows = "🏆 Ranking\n"
     for i, row in enumerate(ranking_response):
         view_rows += (
             f"{render_position(i)} "

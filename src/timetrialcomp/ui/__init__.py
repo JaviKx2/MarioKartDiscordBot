@@ -10,17 +10,6 @@ from src.timetrialcomp.presenter.submit_time import present_submit_time
 from src.timetrialcomp.time_submission.domain.submitted_time import SubmitTimeParams
 
 
-class MainMenuButton(Button):
-    def __init__(self):
-        super().__init__()
-        self.label = "🏠 Main menu"
-        self.row = 4
-
-    async def callback(self, interaction: MessageInteraction[ClientT], /) -> None:
-        await interaction.response.defer()
-        await interaction.edit_original_response("", view=TTCompView())
-
-
 class RankingButton(Button):
     def __init__(self, ttcomp_id):
         super().__init__()
@@ -88,7 +77,7 @@ class SubmitTimeModal(disnake.ui.Modal):
             player_id=str(inter.user.id)
         )
 
-        await inter.send(present_submit_time(params), view=TTCompView())
+        await inter.send(present_submit_time(params), view=TTCompView(self.ttcomp_id))
 
 
 def TTCompView(ttcomp_id) -> View:
