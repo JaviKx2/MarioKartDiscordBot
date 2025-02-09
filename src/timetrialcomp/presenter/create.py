@@ -12,11 +12,11 @@ def present_create(params: CreateParams) -> str:
 
     return (
         f"```"
-        f"TT Competition was created.\n\n"
-        f"🆔: {created_comp.id}\n"
-        f"🏁 Mode: {created_comp.mode}\n"
-        f"🏁 Track: {created_comp.track_code}\n"
+        f"TT Competition was created."
+        f"```"
+        f"🆔 {created_comp.id}\n"
+        f"🍄 {created_comp.mode}\n"
+        f"🏁 {created_comp.track_code}\n"
         f"📅 Starts at <t:{created_comp.starts_at.timestamp()}>\n"
         f"📅 Ends at <t:{created_comp.ends_at.timestamp()}>\n"
-        f"```"
     )

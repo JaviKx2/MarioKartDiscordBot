@@ -12,7 +12,6 @@ async def present_ranking(ttcomp_id, find_user) -> str:
     if len(ranking_response) == 0:
         return f"```No times submitted yet.```"
 
-    view_rows = ""
     max_len = 0
     display_names = dict()
     for row in ranking_response:
@@ -20,12 +19,14 @@ async def present_ranking(ttcomp_id, find_user) -> str:
         display_names.update({row['player_id']: user.display_name})
         max_len = max(max_len, len(user.display_name))
 
+    view_rows = ""
     for i, row in enumerate(ranking_response):
         view_rows += (
             f"{render_position(i)} "
-            f"{display_names[row['player_id']].ljust(max_len)}\t"
-            f"🕒 {row['time']}\t"
-            f"{'✔' if row['approved'] else '❌'}\n"
+            f"{display_names[row['player_id']].ljust(max_len)} "
+            f"🕒 {row['time']} "
+            f"{'✔' if row['approved'] else '❌'}"
+            f"\n"
         )
 
     return f"```{view_rows}```"

@@ -34,6 +34,7 @@ class SqlAlchemySubmittedTimeRepository(SqlAlchemyCoreRepository, SubmittedTimeR
                     submitted_time_table.c.player_id,
                     func.min(submitted_time_table.c.time).label("best_time")
                 )
+                .where(submitted_time_table.c.timetrial_competition_id == competition_id)
                 .group_by(submitted_time_table.c.player_id)
                 .subquery()
             )

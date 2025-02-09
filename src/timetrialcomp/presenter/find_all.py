@@ -13,12 +13,18 @@ def present_competitions(current_competitions) -> str:
     else:
         view_comps = ""
         for comp in current_competitions:
-            view_comps += (
-                f"🆔: {comp.id}\n"
-                f"🏁 Track: {comp.track_code}\n"
-                f"🍄 Mode: {comp.mode}\n"
-                f"📅 Starts at {render_timestamp(comp.starts_at)}\n"
-                f"📅 Ends at {render_timestamp(comp.ends_at)}\n\n"
-            )
+            view_comps += present_competition(comp)
 
-        return f"```{view_comps}```"
+        return f"{view_comps}"
+
+
+def present_competition(comp) -> str:
+    return (
+        f"```"
+        f"🆔 {comp.id}\n"
+        f"🏁 {comp.track_code}\n"
+        f"🍄 {comp.mode}\n"
+        f"```"
+        f"📅 Starts at {render_timestamp(comp.starts_at)}\n"
+        f"📅 Ends at {render_timestamp(comp.ends_at)}\n\n"
+    )

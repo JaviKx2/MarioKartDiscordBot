@@ -1,10 +1,10 @@
 import disnake
-from disnake import MessageInteraction, TextInputStyle
+from disnake import MessageInteraction, TextInputStyle, ActionRow
 from disnake.interactions.base import ClientT
 from disnake.ui import Button, View
 
 from src.timetrialcomp.competition.infrastructure.dependency_injection import current_competitions_finder
-from src.timetrialcomp.presenter.find_all import present_competitions
+from src.timetrialcomp.presenter.find_all import present_competitions, present_competition
 from src.timetrialcomp.presenter.ranking import present_ranking
 from src.timetrialcomp.presenter.submit_time import present_submit_time
 from src.timetrialcomp.time_submission.domain.submitted_time import SubmitTimeParams
@@ -45,10 +45,12 @@ class SubmitTimeButton(Button):
         await interaction.response.send_modal(SubmitTimeModal(self.ttcomp_id))
 
 
+
 class ListCompsButton(Button):
     def __init__(self):
         super().__init__()
         self.label = "📃 List current competitions"
+        self.page = 0
 
     async def callback(self, interaction: MessageInteraction[ClientT], /) -> None:
         await interaction.response.defer()
@@ -56,13 +58,15 @@ class ListCompsButton(Button):
         current_competitions = list(current_competitions_finder.find_current_competitions())
 
         inner_view = View()
-        inner_view.add_item(MainMenuButton())
-        if len(current_competitions):
-            for comp in current_competitions:
-                inner_view.add_item(RankingButton(comp.id))
-                inner_view.add_item(SubmitTimeButton(comp.id))
+        if len(current_competitions) > 0:
+            comp = current_competitions[self.page]
+            inner_view.add_item(RankingButton(comp.id))
+            inner_view.add_item(SubmitTimeButton(comp.id))
+            await interaction.edit_original_response(present_competition(comp), view=inner_view)
 
-        await interaction.edit_original_response(present_competitions(current_competitions), view=inner_view)
+        inner_view.add_item(MainMenuButton())
+
+        await interaction.edit_original_response("", view=inner_view)
 
 
 class SubmitTimeModal(disnake.ui.Modal):
