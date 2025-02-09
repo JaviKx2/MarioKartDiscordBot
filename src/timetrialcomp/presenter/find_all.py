@@ -22,9 +22,7 @@ def present_competition(comp) -> str:
     return (
         f"```"
         f"🆔 {comp.id}\n"
-        f"🏁 {comp.track_code}\n"
-        f"🍄 {comp.mode}\n"
+        f"🏁 {comp.track_code} 🍄 {comp.mode}"
         f"```"
-        f"📅 Starts at {render_timestamp(comp.starts_at)}\n"
-        f"📅 Ends at {render_timestamp(comp.ends_at)}\n\n"
+        f"📅 From {render_timestamp(comp.starts_at)} to {render_timestamp(comp.ends_at)}"
     )

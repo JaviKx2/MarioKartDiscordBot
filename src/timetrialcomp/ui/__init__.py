@@ -18,7 +18,7 @@ class MainMenuButton(Button):
 
     async def callback(self, interaction: MessageInteraction[ClientT], /) -> None:
         await interaction.response.defer()
-        await interaction.edit_original_response("", view=MainMenuView())
+        await interaction.edit_original_response("", view=TTCompView())
 
 
 class RankingButton(Button):
@@ -31,7 +31,7 @@ class RankingButton(Button):
         await interaction.response.defer()
         await interaction.edit_original_response(
             await present_ranking(self.ttcomp_id, interaction.bot.get_or_fetch_user),
-            view=MainMenuView()
+            view=RankingView(self.ttcomp_id)
         )
 
 
@@ -57,16 +57,12 @@ class ListCompsButton(Button):
 
         current_competitions = list(current_competitions_finder.find_current_competitions())
 
-        inner_view = View()
         if len(current_competitions) > 0:
             comp = current_competitions[self.page]
-            inner_view.add_item(RankingButton(comp.id))
-            inner_view.add_item(SubmitTimeButton(comp.id))
-            await interaction.edit_original_response(present_competition(comp), view=inner_view)
+            await interaction.edit_original_response(present_competition(comp), view=TTCompView(comp.id))
+            return
 
-        inner_view.add_item(MainMenuButton())
-
-        await interaction.edit_original_response("", view=inner_view)
+        await interaction.edit_original_response(present_competitions(current_competitions))
 
 
 class SubmitTimeModal(disnake.ui.Modal):
@@ -92,10 +88,17 @@ class SubmitTimeModal(disnake.ui.Modal):
             player_id=str(inter.user.id)
         )
 
-        await inter.send(present_submit_time(params), view=MainMenuView())
+        await inter.send(present_submit_time(params), view=TTCompView())
 
 
-def MainMenuView() -> View:
+def TTCompView(ttcomp_id) -> View:
     view = View()
+    view.add_item(RankingButton(ttcomp_id))
+    view.add_item(SubmitTimeButton(ttcomp_id))
+    return view
+
+def RankingView(ttcomp_id) -> View:
+    view = View()
+    view.add_item(SubmitTimeButton(ttcomp_id))
     view.add_item(ListCompsButton())
     return view
